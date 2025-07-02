@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: inorout
+      POSTGRES_USER: inoroutuser
+      POSTGRES_PASSWORD: devpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://inoroutuser:devpassword@db:5432/inorout
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=core.settings  # adjust if your settings module is named differently
+
+volumes:
+  postgres_data:
