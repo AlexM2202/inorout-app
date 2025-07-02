@@ -5,8 +5,10 @@ services:
     image: postgres:15
     environment:
       POSTGRES_DB: inorout
-      POSTGRES_USER: inoroutuser
+      POSTGRES_USER: inoroutadmin
       POSTGRES_PASSWORD: devpassword
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -21,9 +23,13 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgres://inoroutuser:devpassword@db:5432/inorout
-      - DEBUG=True
-      - DJANGO_SETTINGS_MODULE=core.settings  # adjust if your settings module is named differently
+      DB_NAME: inorout
+      DB_USER: inoroutadmin
+      DB_PASSWORD: devpassword
+      DB_HOST: db
+      DB_PORT: 5432
+      DEBUG: "True"
+      ALLOWED_HOSTS: "*"
 
 volumes:
   postgres_data:
